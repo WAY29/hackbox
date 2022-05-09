@@ -12,7 +12,7 @@
   <a href="#installation">Installation</a> •
   <a href="#usage">Usage</a> •
   <a href="#running">Running</a> •
-<a href="#-notes">Notes</a>
+<a href="#notes">Notes</a>
 </p>
 
 hackbox is an lightweight and easy to use toolbox for hackers, it is designed to organize and uniformly call your favorite command line tools.
