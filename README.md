@@ -14,7 +14,7 @@
 <a href="#-notes">Notes</a>
 </p>
 
-hackbox is an easy-to-use and easy-to-configure toolbox for hackers, it is designed to organize and uniformly call your favorite command line tools.
+hackbox is an lightweight and easy to use toolbox for hackers, it is designed to organize and uniformly call your favorite command line tools.
 
 # Features
 ![](https://tuchuang-1300339532.cos.ap-chengdu.myqcloud.com/img/20220509191847.png)
