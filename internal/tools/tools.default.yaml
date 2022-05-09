@@ -1,0 +1,168 @@
+tools:
+  scan.subdomain.ksubdomain:
+    descriptions: Stateless subdomain blaster
+    download_url: https://github.com/boy-hack/ksubdomain/releases # display when the binary file cannot be found from the path when running
+    args:
+      - 
+        name: file
+        type: file  # type is supported by https://github.com/go-playground/validator, and support "|" as or condition, "string" to skip check.
+        descriptions: targets to scan
+        cmd_arg: -f {{}}
+      - 
+        name: domain
+        type: string
+        descriptions: domain to scan
+        cmd_arg: -d {{}}
+      - 
+        name: level
+        type: number
+        descriptions: domain level number
+        cmd_arg: -l {{}}
+      - 
+        name: level-dict
+        type: file
+        descriptions: domain level dict
+        cmd_arg: --ld {{}}
+    args_expression: file || domain # run failed if expression is false
+    command: ksubdomain enum --silent --od {{domain}} {{file}} {{level}} {{level-dict}}
+    # result_filter_function: link  # link,email,date,time,phone,ip,md5,sha1,sha256,support "|" as or condition
+  scan.port.nmap:
+    descriptions: The Network Mapper
+    download_url: https://github.com/nmap/nmap
+    args:
+      - 
+        name: host
+        type: string
+        descriptions: target to scan
+        cmd_arg: "{{}}"
+      - 
+        name: file
+        type: file
+        descriptions: targets to scan
+        cmd_arg: -iL {{}}
+      - 
+        name: port
+        type: string
+        descriptions: "ports to scan, Ex: -p22; -p1-65535; -p U:53,111,137,T:21-25,80,139,8080,S:9"
+        cmd_arg: -p{{}}
+      -
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 1)
+        cmd_arg: --max-parallelism {{}}
+      - 
+        name: skip_ping
+        type: boolean
+        descriptions: Skip host discovery
+        cmd_arg: -Pn
+      - 
+        name: syn_scan
+        type: boolean
+        descriptions: Use TCP SYN scan
+        cmd_arg: -sS
+      -
+        name: udp_scan
+        type: boolean
+        descriptions: Use UDP scan
+        cmd_arg: -sU
+    args_expression: (host || file) && !(host && file)  && !(syn_scan && udp_scan)
+    command: nmap -n -oG - {{syn_scan}} {{udp_scan}} {{skip_ping}} {{thread}} {{port}} {{file}} {{host}}
+  scan.port.AScanPort:
+    descriptions: A fast and all port mapper
+    download_url: https://github.com/AlphabugX/AScanPort/releases
+    args:
+      - 
+        name: host
+        type: string
+        descriptions: target(s) to scan, e.g. f5.ink|-114.67.111.74|114.67.111.74/28|114.67.111.74-80|114.67.111.74-114.67.111.80|114.67.111.*
+        cmd_arg: -h {{}}
+      - 
+        name: timeout
+        type: number
+        descriptions: connetion timeout 
+        cmd_arg: -time {{}}
+      -
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 10000)
+        cmd_arg: -t {{}}
+    args_expression: host
+    command: AScanPort {{timeout}} {{thread}} {{host}}
+  scan.url.gobuster:
+    descriptions: Brute-force URIs(directories and files)
+    download_url: https://github.com/OJ/gobuster/releases
+    args:
+      - 
+        name: url
+        type: url
+        descriptions: url to scan
+        cmd_arg: -u {{}}
+      - 
+        name: wordlist
+        type: file
+        descriptions: wordlist for scan
+        cmd_arg: -w {{}}
+    args_expression: url && wordlist
+    command: gobuster dir -q -z -e -r -n -k --hide-length {{url}} {{wordlist}}
+  scan.url.httpx:
+    descriptions: HTTP toolkit for detecting surviving websites
+    download_url: https://github.com/projectdiscovery/httpx/releases
+    args:
+      - 
+        name: file
+        type: file
+        descriptions: input file containing list of hosts to process
+        cmd_arg: -l {{}}
+      - 
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 50)
+        cmd_arg: -t {{}}
+    args_expression: file
+    command: httpx -silent -random-agent -nc {{thread}} {{file}}
+  scan.vuln.nuclei:
+    descriptions: Fast and customisable vulnerability scanner based on simple YAML based DSL
+    download_url: https://github.com/projectdiscovery/nuclei/releases
+    args:
+      - 
+        name: target
+        type: string
+        descriptions:  target URLs/hosts to scan
+        cmd_arg: -u {{}}
+      - 
+        name: file
+        type: file
+        descriptions:  path to file containing a list of target URLs/hosts to scan
+        cmd_arg: -l {{}}
+      - 
+        name: thread
+        type: number
+        descriptions: nmaximum number of templates to be executed in parallel (default 25)
+        cmd_arg: -c {{}}
+      -
+        name: json
+        type: boolean
+        descriptions: write output in JSONL(ines) format
+        cmd_arg: -json
+    args_expression: target || file
+    command: nuclei -silent -nc {{thread}} {{json}} {{target}} {{file}} 
+  other.echo:
+    descriptions: just a echo command
+    args: 
+     -
+        name: s
+        type: string
+        descriptions: something
+        cmd_arg: "{{}}"
+    args_expression: s
+    command: echo {{s}}
+  other.cat:
+    descriptions: just a cat command
+    args: 
+     -
+        name: file
+        type: file
+        descriptions: file to cat
+        cmd_arg: "{{}}"
+    args_expression: file
+    command: cat {{file}}
