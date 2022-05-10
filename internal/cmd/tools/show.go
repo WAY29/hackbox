@@ -10,7 +10,7 @@ import (
 )
 
 func CmdShowSuggests(args []string, word string, currentLine string) []prompt.Suggest {
-	if len(args) == 2 {
+	if len(args) == 2 && prompts.Prompt.UseTool != nil {
 		return prompt.FilterHasPrefix(prompts.Prompt.UseTool.ArgSuggests, word, true)
 	}
 	return suggest.EmptySuggests

@@ -21,7 +21,7 @@ func CmdSetGSuggests(args []string, word string, currentLine string) []prompt.Su
 
 	if len(args) == 3 {
 		return prompt.FilterHasPrefix(*output.GetSuggests(), word, true)
-	} else if len(args) == 2 {
+	} else if len(args) == 2 && prompts.Prompt.UseTool != nil {
 		return prompt.FilterHasPrefix(prompts.Prompt.UseTool.ArgSuggests, word, true)
 	}
 
