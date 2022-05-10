@@ -26,6 +26,32 @@ tools:
     args_expression: file || domain # run failed if expression is false
     command: ksubdomain enum --silent --od {{domain}} {{file}} {{level}} {{level-dict}}
     # result_filter_function: link  # link,email,date,time,phone,ip,md5,sha1,sha256,support "|" as or condition
+  scan.host.nmap:
+    descriptions: The Network Mapper
+    download_url: https://github.com/nmap/nmap
+    args:
+      - 
+        name: host
+        type: string
+        descriptions: target to scan
+        cmd_arg: "{{}}"
+      - 
+        name: file
+        type: file
+        descriptions: targets to scan
+        cmd_arg: -iL {{}}
+      -
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 1)
+        cmd_arg: --max-parallelism {{}}
+      - 
+        name: arp_scan
+        type: boolean
+        descriptions: Use ARP Ping instead of ICMP Ping
+        cmd_arg: -PR
+    args_expression: (host || file) && !(host && file) 
+    command: nmap -n -oG - -sn {{arp_scan}} {{thread}} {{file}} {{host}}
   scan.port.nmap:
     descriptions: The Network Mapper
     download_url: https://github.com/nmap/nmap
@@ -65,8 +91,13 @@ tools:
         type: boolean
         descriptions: Use UDP scan
         cmd_arg: -sU
+      -
+        name: version_detection
+        type: boolean
+        descriptions: Probe open ports to determine service/version info
+        cmd_arg: -sV
     args_expression: (host || file) && !(host && file)  && !(syn_scan && udp_scan)
-    command: nmap -n -oG - {{syn_scan}} {{udp_scan}} {{skip_ping}} {{thread}} {{port}} {{file}} {{host}}
+    command: nmap -n -oG - {{syn_scan}} {{udp_scan}} {{version_detection}} {{skip_ping}} {{thread}} {{port}} {{file}} {{host}}
   scan.port.AScanPort:
     descriptions: A fast and all port mapper
     download_url: https://github.com/AlphabugX/AScanPort/releases
