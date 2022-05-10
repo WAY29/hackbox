@@ -58,19 +58,21 @@ func ArgumentMsg(name, argType, value string) {
 	fmt.Fprintf(StandardOutput, "  - %s [%s]: %s\n", au.Cyan(name), au.Yellow(argType), value)
 }
 
-func OutputSoonMsg(name string) {
-	Success("Outout => %s soon...\n", au.Cyan(name))
-}
-
-func OutputMsg(name string) {
-	Success("Outout => %s\n", au.Cyan(name))
-}
-
 func formatName(name string) string {
 	if strings.Contains(name, "$") {
 		return name[1:]
 	}
 	return name
+}
+
+func OutputSoonMsg(name string) {
+	name = formatName(name)
+	Success("Outout => %s soon...\n", au.Cyan("$"+name))
+}
+
+func OutputMsg(name string) {
+	name = formatName(name)
+	Success("Outout => %s\n", au.Cyan("$"+name))
 }
 
 func SetOutputMsg(name, value string) {
