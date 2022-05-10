@@ -18,7 +18,7 @@
 hackbox is an lightweight and easy to use toolbox for hackers, it is designed to organize and uniformly call your favorite command line tools.
 
 # Features
-![](https://tuchuang-1300339532.cos.ap-chengdu.myqcloud.com/img/20220509191847.png)
+![](https://tuchuang-1300339532.cos.ap-chengdu.myqcloud.com/img/20220510094809.png)
 
 - Highly **interactive command line framework** powered by [c-bata/go-prompt](https://github.com/c-bata/go-prompt)
 - Easy to use and intelligent **automatic completion**
