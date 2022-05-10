@@ -32,7 +32,7 @@ func CmdSH(args []string) {
 	outputs := *output.GetOutputs()
 	envs := make([]string, 0, len(outputs))
 	for name, value := range outputs {
-		envs = append(envs, name+"="+value)
+		envs = append(envs, fmt.Sprintf(`%s=%s`, name, strings.ReplaceAll(value, "\n", "\\n")))
 	}
 	envs = append(envs, os.Environ()...)
 
