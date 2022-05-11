@@ -2,12 +2,15 @@ package main
 
 import (
 	"flag"
+	"os"
 
+	"github.com/WAY29/errors"
 	"github.com/WAY29/hackbox/customtools"
 	_ "github.com/WAY29/hackbox/customtools" // 为了触发init注入自定义工具
 	"github.com/WAY29/hackbox/internal/cmd"
 	_ "github.com/WAY29/hackbox/internal/cmd/root"  // 为了触发init注入命令
 	_ "github.com/WAY29/hackbox/internal/cmd/tools" // 为了触发init注入命令
+	"github.com/blang/semver"
 
 	"github.com/WAY29/hackbox/internal/colorprint"
 	. "github.com/WAY29/hackbox/internal/colorprint"
@@ -18,6 +21,7 @@ import (
 	"github.com/WAY29/hackbox/utils"
 
 	"github.com/c-bata/go-prompt"
+	"github.com/rhysd/go-github-selfupdate/selfupdate"
 )
 
 const (
@@ -27,12 +31,14 @@ const (
 var (
 	noColor        bool
 	quiet          bool
+	selfUpdate     bool
 	customToolPath string
 )
 
 func init() {
 	flag.BoolVar(&noColor, "nc", false, "Print without color")
 	flag.BoolVar(&quiet, "q", false, "Run hackbox without banner")
+	flag.BoolVar(&selfUpdate, "update", false, "check and update hackbox")
 	flag.StringVar(&customToolPath, "p", "", "Custom tool path, default will load from ./tools.toml -> $HOME/.config/hackbox/tools.yaml")
 }
 
@@ -48,9 +54,44 @@ func banner() {
    `)
 }
 
+func selfUpdateFunc() {
+	latest, found, err := selfupdate.DetectLatest("WAY29/hackbox")
+	if err != nil {
+		wrappedErr := errors.Wrap(err, "Error occurred while detecting version")
+		Error(wrappedErr.Error())
+		return
+	}
+
+	v := semver.MustParse(__version__)
+	if !found || latest.Version.LTE(v) {
+		Success("Current hackbox[%s] is the latest", __version__)
+		return
+	}
+	exe, err := os.Executable()
+	if err != nil {
+		wrappedErr := errors.Wrap(err, "Could not locate executable path")
+		Error(wrappedErr.Error())
+		return
+	}
+	if err := selfupdate.UpdateTo(latest.AssetURL, exe); err != nil {
+		wrappedErr := errors.Wrap(err, "Error occurred while updating binary")
+		Error(wrappedErr.Error())
+		return
+	}
+
+	Success("Successfully updated to hackbox[%s]", latest.Version)
+}
+
 func main() {
 	// 解析标志
 	flag.Parse()
+
+	// 自动更新
+	if selfUpdate {
+		selfUpdateFunc()
+		return
+	}
+
 	// 输出banner
 	if !quiet {
 		banner()
