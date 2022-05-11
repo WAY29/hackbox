@@ -40,7 +40,7 @@ func CmdCDSuggests(args []string, word string, currentLine string) []prompt.Sugg
 			for _, suggest := range tooldir.PathSuggests {
 				restoreSuggests = append(restoreSuggests, suggest.Text)
 			}
-			for i := range tooldir.PathSuggests {
+			for i := 0; i < len(tooldir.PathSuggests); i++ {
 				pathStringBuilder.WriteString(tempPath)
 				if !strings.HasSuffix(tempPath, "/") {
 					pathStringBuilder.WriteString("/")
@@ -53,7 +53,7 @@ func CmdCDSuggests(args []string, word string, currentLine string) []prompt.Sugg
 			}
 
 			defer func() {
-				for i := range tooldir.PathSuggests {
+				for i := 0; i < len(tooldir.PathSuggests); i++ {
 					tooldir.PathSuggests[i].Text = restoreSuggests[i]
 				}
 			}()
