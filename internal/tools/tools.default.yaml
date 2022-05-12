@@ -151,6 +151,48 @@ tools:
         cmd_arg: -t {{}}
     args_expression: file
     command: httpx -silent -random-agent -nc {{thread}} {{file}}
+  scan.finger.onefinger:
+    descriptions: Simple http fingerprinting tool
+    download_url: https://github.com/WAY29/onefinger/releases
+    args:
+      - 
+        name: url
+        type: string
+        descriptions: url to scan
+        cmd_arg: -t {{}}
+      - 
+        name: file
+        type: file
+        descriptions: input file containing list of urls
+        cmd_arg: --tf {{}}
+      - 
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 20)
+        cmd_arg: --threads {{}}
+    args_expression: url || file
+    command: onefinger {{thread}} {{file}} {{url}}
+  scan.finger.whatweb:
+    descriptions: Next generation web scanner 
+    download_url: https://github.com/urbanadventurer/WhatWeb
+    args:
+      - 
+        name: target
+        type: string
+        descriptions: target URL/host to scan
+        cmd_arg: "{{}}"
+      - 
+        name: file
+        type: file
+        descriptions: path to file containing a list of target URLs/hosts to scan
+        cmd_arg: -i {{}}
+      - 
+        name: thread
+        type: number
+        descriptions: number of threads to use (default 25)
+        cmd_arg: -t {{}}
+    args_expression: target || file
+    command: whatweb --color=never --no-errors {{thread}} {{file}} {{target}}
   scan.vuln.nuclei:
     descriptions: Fast and customisable vulnerability scanner based on simple YAML based DSL
     download_url: https://github.com/projectdiscovery/nuclei/releases
