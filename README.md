@@ -75,6 +75,7 @@ By the way, you can `setoutput` or `unsetoutput`
 
 # Notes
 - It only took me three days to write this project, so there may be some mistakes, welcome issues.
+- If you have any commonly used hacking tools that are not included in hackbox, welcome pull-requests(tools.default.yaml) and issues.
 
 
 
