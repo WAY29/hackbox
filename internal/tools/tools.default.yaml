@@ -108,6 +108,11 @@ tools:
         descriptions: target(s) to scan, e.g. f5.ink|-114.67.111.74|114.67.111.74/28|114.67.111.74-80|114.67.111.74-114.67.111.80|114.67.111.*
         cmd_arg: -h {{}}
       - 
+        name: file
+        type: file
+        descriptions: targets to scan
+        cmd_arg: -hf {{}}
+      - 
         name: timeout
         type: number
         descriptions: connetion timeout 
@@ -118,7 +123,7 @@ tools:
         descriptions: number of threads to use (default 10000)
         cmd_arg: -t {{}}
     args_expression: host
-    command: AScanPort {{timeout}} {{thread}} {{host}}
+    command: AScanPort -s -check 2 {{timeout}} {{thread}} {{host}}
   scan.url.gobuster:
     descriptions: Brute-force URIs(directories and files)
     download_url: https://github.com/OJ/gobuster/releases
